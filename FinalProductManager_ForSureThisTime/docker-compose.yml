@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  finalproductmanager_forsurethistime:
+    image: ${DOCKER_REGISTRY-}finalproductmanagerforsurethistime
+    build:
+      context: .
+      dockerfile: FinalProductManager_ForSureThisTime/Dockerfile
