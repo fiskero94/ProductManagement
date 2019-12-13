@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FinalProductManager_ForSureThisTime.Migrations
 {
     [DbContext(typeof(ProductContext))]
-    [Migration("20191213072542_ComeOn")]
-    partial class ComeOn
+    [Migration("20191213215209_StockUpdate")]
+    partial class StockUpdate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -76,6 +76,9 @@ namespace FinalProductManager_ForSureThisTime.Migrations
 
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("Stock")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
