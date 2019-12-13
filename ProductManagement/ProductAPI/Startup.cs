@@ -18,6 +18,7 @@ namespace ProductAPI
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            XD
         }
 
         public IConfiguration Configuration { get; }
