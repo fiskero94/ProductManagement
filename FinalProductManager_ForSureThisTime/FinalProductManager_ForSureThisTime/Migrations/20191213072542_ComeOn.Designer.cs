@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FinalProductManager_ForSureThisTime.Migrations
 {
     [DbContext(typeof(ProductContext))]
-    [Migration("20191213070658_ThisTime")]
-    partial class ThisTime
+    [Migration("20191213072542_ComeOn")]
+    partial class ComeOn
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
