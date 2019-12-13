@@ -32,6 +32,7 @@ namespace FinalProductManager_ForSureThisTime
             services.AddControllers();
             services.AddDbContext<ProductContext>(o => o.UseSqlServer(Configuration.GetConnectionString("ProductDB")));
             services.AddTransient<IProductRepository, ProductRepository>();
+            services.AddHostedService<RabbitService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
