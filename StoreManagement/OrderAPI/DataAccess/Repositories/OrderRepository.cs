@@ -1,11 +1,9 @@
-﻿using Infrastructure.DataAccess;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using Infrastructure.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using OrderAPI.DataAccess.Contexts;
 using OrderAPI.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace OrderAPI.DataAccess.Repositories
 {

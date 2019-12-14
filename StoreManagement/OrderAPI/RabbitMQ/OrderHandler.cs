@@ -1,23 +1,18 @@
-﻿using Infrastructure.DataAccess;
+﻿using System.Threading.Tasks;
+using Infrastructure.DataAccess;
 using Infrastructure.Messages;
 using Infrastructure.Messaging;
 using Newtonsoft.Json.Linq;
 using OrderAPI.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace OrderAPI.RabbitMQ
 {
     public class OrderHandler : IRabbitMQHandler
     {
-        private readonly Repository<Order> _orderRepository;
         private readonly Repository<Product> _productRepository;
 
-        public OrderHandler(Repository<Order> orderRepository, Repository<Product> productRepository)
+        public OrderHandler(Repository<Product> productRepository)
         {
-            _orderRepository = orderRepository;
             _productRepository = productRepository;
         }
 

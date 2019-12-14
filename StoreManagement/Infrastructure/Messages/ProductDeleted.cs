@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Infrastructure.Messages
+﻿namespace Infrastructure.Messages
 {
     public class ProductDeleted
     {

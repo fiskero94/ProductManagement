@@ -1,12 +1,9 @@
-﻿using Infrastructure.DataAccess;
+﻿using System.Threading.Tasks;
+using Infrastructure.DataAccess;
 using Infrastructure.Messages;
 using Infrastructure.Messaging;
 using Newtonsoft.Json.Linq;
 using ProductAPI.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ProductAPI.RabbitMQ
 {
