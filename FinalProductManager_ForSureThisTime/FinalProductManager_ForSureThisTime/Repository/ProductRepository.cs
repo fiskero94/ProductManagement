@@ -12,13 +12,11 @@ namespace FinalProductManager_ForSureThisTime.Repository
     {
         private readonly ProductContext _dbContext;
 
-        public static ProductRepository singletonRepo;
-
         public ProductRepository(ProductContext dbContext)
         {
-            singletonRepo = this;
             _dbContext = dbContext;
         }
+
         public async Task DeleteProduct(int productId)
         {
             var product = _dbContext.Products.Find(productId);
@@ -57,6 +55,14 @@ namespace FinalProductManager_ForSureThisTime.Repository
 
             //_dbContext.Entry(product).State = EntityState.Modified;
             await Save();
+        }
+
+        public static ProductRepository GetRepository()
+        {
+            DbContextOptionsBuilder<ProductContext> maybe = new DbContextOptionsBuilder<ProductContext>();
+            maybe.UseSqlServer(ProductContext.ConnectionString);
+
+            return new ProductRepository(new ProductContext(maybe.Options));
         }
     }
 }

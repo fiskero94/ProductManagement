@@ -5,6 +5,8 @@ namespace FinalProductManager_ForSureThisTime.DBContexts
 {
     public class ProductContext : DbContext
     {
+        public static string ConnectionString = "Data Source=172.22.146.161,1433;Database=ProductsDB;User ID=ayis1;Password=bgf39cvr";
+
         public ProductContext(DbContextOptions<ProductContext> options) : base(options)
         {
         }

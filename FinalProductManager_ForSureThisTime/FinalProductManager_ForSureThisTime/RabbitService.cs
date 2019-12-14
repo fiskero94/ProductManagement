@@ -1,12 +1,14 @@
 ﻿using FinalProductManager_ForSureThisTime.Controllers;
 using FinalProductManager_ForSureThisTime.DBContexts;
 using FinalProductManager_ForSureThisTime.Repository;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -87,7 +89,7 @@ namespace FinalProductManager_ForSureThisTime
 
         private async Task HandleProductOrderedAsync(string content)
         {
-            ProductRepository productRepository = ProductRepository.singletonRepo;
+            ProductRepository productRepository = ProductRepository.GetRepository();
             var oldProduct = await productRepository.GetProductByID(int.Parse(content));
             var updatedProduct = oldProduct;
             updatedProduct.Stock -= 1;
