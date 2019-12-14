@@ -27,8 +27,6 @@ namespace FinalProductManager_ForSureThisTime.Controllers
         public async Task<IActionResult> GetAllAsync()
         {
             var products = await _productRepository.GetAllProductsAsync();
-            //RabbitService rabbit = new RabbitService();
-            //rabbit.PublishSomething("2");
             return new OkObjectResult(products);
         }
 
@@ -46,6 +44,7 @@ namespace FinalProductManager_ForSureThisTime.Controllers
             {
                 await _productRepository.InsertProductAsync(product);
                 scope.Complete();
+                new RabbitService().PublishProductCreated(product.Id.ToString() + " " + product.Stock.ToString());
                 return CreatedAtAction(nameof(GetAllAsync), new { id = product.Id }, product);
             }
         }

@@ -67,12 +67,20 @@ namespace FinalProductManager_ForSureThisTime
             return Task.CompletedTask;
         }
 
-        public void PublishProductStockTooLow(string message)
+        public void PublishProductCreated(string message)
         {
                 byte[] bytes = System.Text.Encoding.UTF8.GetBytes(message);
                 IBasicProperties properties = _channel.CreateBasicProperties();
-                properties.Type = "ProductStockTooLow";
+                properties.Type = "ProductCreated";
                 _channel.BasicPublish("order.exchange", "order.queue.*", properties, bytes);
+        }
+
+        public void PublishProductStockTooLow(string message)
+        {
+            byte[] bytes = System.Text.Encoding.UTF8.GetBytes(message);
+            IBasicProperties properties = _channel.CreateBasicProperties();
+            properties.Type = "ProductStockTooLow";
+            _channel.BasicPublish("order.exchange", "order.queue.*", properties, bytes);
         }
 
         public void PublishProductOrderSuccess(string message)
