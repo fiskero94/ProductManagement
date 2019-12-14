@@ -90,7 +90,7 @@ namespace OrderManager
 
         private async Task HandleProductCreatedAsync(string content)
         {
-
+            ProductRepository productRepository = ProductRepository.GetRepository();
         }
 
         private async Task HandleProductStockTooLowAsync(string content)

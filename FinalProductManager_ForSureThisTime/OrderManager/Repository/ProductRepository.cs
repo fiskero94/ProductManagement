@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace OrderManager.Repository
 {
-    public class ProductRepository
+    public class ProductRepository : IProductRepository
     {
         private readonly ProductContext _dbContext;
 
