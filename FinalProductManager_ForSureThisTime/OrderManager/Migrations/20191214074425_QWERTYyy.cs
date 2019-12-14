@@ -2,7 +2,7 @@
 
 namespace OrderManager.Migrations
 {
-    public partial class QWERTY : Migration
+    public partial class QWERTYyy : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -12,6 +12,7 @@ namespace OrderManager.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    ProductId = table.Column<int>(nullable: false),
                     Stock = table.Column<int>(nullable: false)
                 },
                 constraints: table =>

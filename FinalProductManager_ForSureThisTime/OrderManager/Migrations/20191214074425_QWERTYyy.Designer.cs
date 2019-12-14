@@ -9,8 +9,8 @@ using OrderManager.DBContexts;
 namespace OrderManager.Migrations
 {
     [DbContext(typeof(ProductContext))]
-    [Migration("20191214064249_QWERTY")]
-    partial class QWERTY
+    [Migration("20191214074425_QWERTYyy")]
+    partial class QWERTYyy
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -26,6 +26,9 @@ namespace OrderManager.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
 
                     b.Property<int>("Stock")
                         .HasColumnType("int");

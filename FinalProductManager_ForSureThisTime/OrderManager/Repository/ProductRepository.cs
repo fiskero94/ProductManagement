@@ -19,7 +19,7 @@ namespace OrderManager.Repository
 
         public async Task<Product> GetProductByIDAsync(int productId)
         {
-            return await _dbContext.Products.FindAsync(productId);
+            return await _dbContext.Products.Where(x => x.ProductId == productId).FirstOrDefaultAsync<Product>();
         }
 
         public async Task InsertProductAsync(Product product)

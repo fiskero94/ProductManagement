@@ -23,7 +23,7 @@ namespace OrderManager
 
         private void InitRabbitMQ()
         {
-            var factory = new ConnectionFactory { HostName = "172.22.146.161", UserName = "rabbitmquser", Password = "TisseMand1234" };
+            var factory = new ConnectionFactory { HostName = "172.22.146.161", UserName = "rabbitmquser", Password = "appelsin123" };
 
             // create connection  
             _connection = factory.CreateConnection();
@@ -31,9 +31,9 @@ namespace OrderManager
             // create channel  
             _channel = _connection.CreateModel();
 
-            _channel.ExchangeDeclare("product.exchange", ExchangeType.Topic);
-            _channel.QueueDeclare("product.queue.log", false, false, false, null);
-            _channel.QueueBind("product.queue.log", "product.exchange", "product.queue.*", null);
+            _channel.ExchangeDeclare("order.exchange", ExchangeType.Topic);
+            _channel.QueueDeclare("order.queue.log", false, false, false, null);
+            _channel.QueueBind("order.queue.log", "order.exchange", "order.queue.*", null);
             _channel.BasicQos(0, 1, false);
 
             _connection.ConnectionShutdown += RabbitMQ_ConnectionShutdown;
@@ -59,7 +59,7 @@ namespace OrderManager
             consumer.Unregistered += OnConsumerUnregistered;
             consumer.ConsumerCancelled += OnConsumerConsumerCancelled;
 
-            _channel.BasicConsume("product.queue.log", false, consumer);
+            _channel.BasicConsume("order.queue.log", false, consumer);
             return Task.CompletedTask;
         }
 
@@ -94,7 +94,7 @@ namespace OrderManager
             string[] productArray = content.Split(null);
             ProductRepository productRepository = ProductRepository.GetRepository();
             Product product = new Product();
-            product.Id = int.Parse(productArray[0]);
+            product.ProductId = int.Parse(productArray[0]);
             product.Stock = int.Parse(productArray[1]);
             await productRepository.InsertProductAsync(product);
         }

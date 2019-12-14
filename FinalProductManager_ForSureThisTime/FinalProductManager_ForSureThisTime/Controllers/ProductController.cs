@@ -40,13 +40,9 @@ namespace FinalProductManager_ForSureThisTime.Controllers
         [HttpPost]
         public async Task<IActionResult> PostAsync([FromBody] Product product)
         {
-            using (var scope = new TransactionScope())
-            {
-                await _productRepository.InsertProductAsync(product);
-                scope.Complete();
-                new RabbitService().PublishProductCreated(product.Id.ToString() + " " + product.Stock.ToString());
-                return CreatedAtAction(nameof(GetAllAsync), new { id = product.Id }, product);
-            }
+            await _productRepository.InsertProductAsync(product);
+            new RabbitService().PublishProductCreated(product.Id.ToString() + " " + product.Stock.ToString());
+            return new OkObjectResult(product);
         }
 
         [HttpPut("{id}")]

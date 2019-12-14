@@ -8,6 +8,7 @@ namespace OrderManager.Model
     public class Product
     {
         public int Id { get; set; }
+        public int ProductId { get; set; }
         public int Stock { get; set; }
     }
 }

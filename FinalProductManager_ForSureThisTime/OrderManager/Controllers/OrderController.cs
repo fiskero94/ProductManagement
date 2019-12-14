@@ -38,16 +38,10 @@ namespace OrderManager.Controllers
         [HttpPost]
         public async Task<IActionResult> PostAsync([FromBody] Order order)
         {
-            using (var scope = new TransactionScope())
-            {
-                await _orderRepository.InsertOrderAsync(order);
-                scope.Complete();
-
-                RabbitService rabbit = new RabbitService();
-                rabbit.PublishProductOrdered(order.Id);
-
-                return CreatedAtAction(nameof(GetAsync), new { id = order.Id }, order);
-            }
+            await _orderRepository.InsertOrderAsync(order);
+            RabbitService rabbit = new RabbitService();
+            rabbit.PublishProductOrdered(order.ProductId);
+            return new OkObjectResult(order);
         }
     }
 }

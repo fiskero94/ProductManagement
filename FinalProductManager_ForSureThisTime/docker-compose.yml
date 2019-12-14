@@ -11,7 +11,7 @@ services:
       - "5672:5672"
     environment:
       - RABBITMQ_DEFAULT_USER=rabbitmquser
-      - RABBITMQ_DEFAULT_PASS=TisseMand1234
+      - RABBITMQ_DEFAULT_PASS=appelsin123
   finalproductmanager_forsurethistime:
     image: ${DOCKER_REGISTRY-}finalproductmanagerforsurethistime
     build:

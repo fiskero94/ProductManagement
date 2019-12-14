@@ -27,7 +27,7 @@ namespace FinalProductManager_ForSureThisTime
 
         private void InitRabbitMQ()
         {
-            var factory = new ConnectionFactory { HostName = "172.22.146.161", UserName = "rabbitmquser", Password = "TisseMand1234" };
+            var factory = new ConnectionFactory { HostName = "172.22.146.161", UserName = "rabbitmquser", Password = "appelsin123" };
 
             // create connection  
             _connection = factory.CreateConnection();
