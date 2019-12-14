@@ -52,7 +52,7 @@ namespace FinalProductManager_ForSureThisTime
                 var content = System.Text.Encoding.UTF8.GetString(ea.Body);
 
                 // handle the received message  
-                HandleMessageAsync(content, ea.BasicProperties.Type);
+                await HandleMessageAsync(content, ea.BasicProperties.Type);
                 _channel.BasicAck(ea.DeliveryTag, false);
             };
 
@@ -65,34 +65,33 @@ namespace FinalProductManager_ForSureThisTime
             return Task.CompletedTask;
         }
 
-        public void publishSomething(string message)
+        public void PublishSomething(string message)
         {
-            byte[] bytes = System.Text.Encoding.UTF8.GetBytes(message);
-            IBasicProperties properties = _channel.CreateBasicProperties();
-            properties.Type = "ProductOrdered";
-            _channel.BasicPublish("product.exchange", "product.queue.*", properties, bytes);
+                byte[] bytes = System.Text.Encoding.UTF8.GetBytes(message);
+                IBasicProperties properties = _channel.CreateBasicProperties();
+                properties.Type = "ProductOrdered";
+                _channel.BasicPublish("product.exchange", "product.queue.*", properties, bytes);
         }
 
-        private void HandleMessageAsync(string content, string type)
+        private async Task HandleMessageAsync(string content, string type)
         {
-
             switch (type)
             {
                 case "ProductOrdered":
-                    HandleProductOrderedAsync(content);
+                    await HandleProductOrderedAsync(content);
                     break;
                 default:
                     break;
             }
         }
 
-        private void HandleProductOrderedAsync(string content)
+        private async Task HandleProductOrderedAsync(string content)
         {
             ProductRepository productRepository = ProductRepository.singletonRepo;
-            var product = productRepository.GetProductByID(int.Parse(content));
-            product.Stock -= 1;
-            productRepository.UpdateProduct(product);
-            productRepository.Save();
+            var oldProduct = await productRepository.GetProductByID(int.Parse(content));
+            var updatedProduct = oldProduct;
+            updatedProduct.Stock -= 1;
+            await productRepository.UpdateProduct(oldProduct, updatedProduct);
         }
 
         private void OnConsumerConsumerCancelled(object sender, ConsumerEventArgs e) { }

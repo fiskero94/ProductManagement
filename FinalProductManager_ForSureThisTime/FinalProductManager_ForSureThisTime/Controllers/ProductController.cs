@@ -24,51 +24,53 @@ namespace FinalProductManager_ForSureThisTime.Controllers
         }
 
         [HttpGet]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
-            var products = _productRepository.GetProducts();
-            //RabbitService rabbit = new RabbitService(_productRepository);
-            //rabbit.publishSomething("hey is this working");
+            var products = await _productRepository.GetProducts();
+            RabbitService rabbit = new RabbitService();
+            rabbit.PublishSomething("2");
             return new OkObjectResult(products);
         }
 
         [HttpGet("{id}", Name = "Get")]
-        public IActionResult Get(int id)
+        public async Task<IActionResult> Get(int id)
         {
-            var product = _productRepository.GetProductByID(id);
+            var product = await _productRepository.GetProductByID(id);
             return new OkObjectResult(product);
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody] Product product)
+        public async Task<IActionResult> Post([FromBody] Product product)
         {
             using (var scope = new TransactionScope())
             {
-                _productRepository.InsertProduct(product);
+                await _productRepository.InsertProduct(product);
                 scope.Complete();
                 return CreatedAtAction(nameof(Get), new { id = product.Id }, product);
             }
         }
 
-        [HttpPut]
-        public IActionResult Put([FromBody] Product product)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Put(int id, [FromBody] Product product)
         {
-            if (product != null)
+            if (product == null)
             {
-                using (var scope = new TransactionScope())
-                {
-                    _productRepository.UpdateProduct(product);
-                    scope.Complete();
-                    return new OkResult();
-                }
+                return BadRequest("Product is null.");
             }
+
+            Product productToUpdate = await _productRepository.GetProductByID(id);
+            if (productToUpdate == null)
+            {
+                return NotFound("Product not found");
+            }
+            await _productRepository.UpdateProduct(productToUpdate, product);
             return new NoContentResult();
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            _productRepository.DeleteProduct(id);
+            await _productRepository.DeleteProduct(id);
             return new OkResult();
         }
     }

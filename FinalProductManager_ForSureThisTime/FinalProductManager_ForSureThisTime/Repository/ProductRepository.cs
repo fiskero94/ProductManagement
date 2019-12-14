@@ -19,38 +19,44 @@ namespace FinalProductManager_ForSureThisTime.Repository
             singletonRepo = this;
             _dbContext = dbContext;
         }
-        public void DeleteProduct(int productId)
+        public async Task DeleteProduct(int productId)
         {
             var product = _dbContext.Products.Find(productId);
             _dbContext.Products.Remove(product);
-            Save();
+            await Save();
         }
 
-        public Product GetProductByID(int productId)
+        public async Task<Product> GetProductByID(int productId)
         {
-            return _dbContext.Products.Find(productId);
+            return await _dbContext.Products.FindAsync(productId);
         }
 
-        public IEnumerable<Product> GetProducts()
+        public async Task<IEnumerable<Product>> GetProducts()
         {
-            return _dbContext.Products.ToList();
+            return await _dbContext.Products.ToListAsync();
         }
 
-        public void InsertProduct(Product product)
+        public async Task InsertProduct(Product product)
         {
             _dbContext.Add(product);
-            Save();
+            await Save();
         }
 
-        public void Save()
+        public async Task Save()
         {
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
         }
 
-        public void UpdateProduct(Product product)
+        public async Task UpdateProduct(Product oldProduct, Product updatedProduct)
         {
-            _dbContext.Entry(product).State = EntityState.Modified;
-            Save();
+            oldProduct.Name = updatedProduct.Name;
+            oldProduct.Price = updatedProduct.Price;
+            oldProduct.Stock = updatedProduct.Stock;
+            oldProduct.Description = updatedProduct.Description;
+            oldProduct.CategoryId = updatedProduct.CategoryId;
+
+            //_dbContext.Entry(product).State = EntityState.Modified;
+            await Save();
         }
     }
 }
