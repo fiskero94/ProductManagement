@@ -1,4 +1,7 @@
-﻿using Microsoft.Extensions.Hosting;
+﻿using FinalProductManager_ForSureThisTime.Controllers;
+using FinalProductManager_ForSureThisTime.DBContexts;
+using FinalProductManager_ForSureThisTime.Repository;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
@@ -15,10 +18,11 @@ namespace FinalProductManager_ForSureThisTime
         private readonly ILogger _logger;
         private IConnection _connection;
         private IModel _channel;
+        private ProductRepository productRepo;
 
-        public RabbitService(ILoggerFactory loggerFactory)
+        public RabbitService(ProductRepository productRepository)
         {
-            this._logger = loggerFactory.CreateLogger<RabbitService>();
+            productRepo = productRepository;
             InitRabbitMQ();
         }
 
@@ -32,9 +36,9 @@ namespace FinalProductManager_ForSureThisTime
             // create channel  
             _channel = _connection.CreateModel();
 
-            _channel.ExchangeDeclare("demo.exchange", ExchangeType.Topic);
-            _channel.QueueDeclare("demo.queue.log", false, false, false, null);
-            _channel.QueueBind("demo.queue.log", "demo.exchange", "demo.queue.*", null);
+            _channel.ExchangeDeclare("product.exchange", ExchangeType.Topic);
+            _channel.QueueDeclare("product.queue.log", false, false, false, null);
+            _channel.QueueBind("product.queue.log", "product.exchange", "product.queue.*", null);
             _channel.BasicQos(0, 1, false);
 
             _connection.ConnectionShutdown += RabbitMQ_ConnectionShutdown;
@@ -45,13 +49,13 @@ namespace FinalProductManager_ForSureThisTime
             stoppingToken.ThrowIfCancellationRequested();
 
             var consumer = new EventingBasicConsumer(_channel);
-            consumer.Received += (ch, ea) =>
+            consumer.Received += async (ch, ea) =>
             {
                 // received message  
                 var content = System.Text.Encoding.UTF8.GetString(ea.Body);
 
                 // handle the received message  
-                HandleMessage(content);
+                await HandleMessageAsync(content, ea.BasicProperties.Type);
                 _channel.BasicAck(ea.DeliveryTag, false);
             };
 
@@ -60,7 +64,7 @@ namespace FinalProductManager_ForSureThisTime
             consumer.Unregistered += OnConsumerUnregistered;
             consumer.ConsumerCancelled += OnConsumerConsumerCancelled;
 
-            _channel.BasicConsume("demo.queue.log", false, consumer);
+            _channel.BasicConsume("product.queue.log", false, consumer);
             return Task.CompletedTask;
         }
 
@@ -69,13 +73,27 @@ namespace FinalProductManager_ForSureThisTime
             byte[] bytes = System.Text.Encoding.UTF8.GetBytes(message);
             IBasicProperties properties = _channel.CreateBasicProperties();
             properties.Type = "ProductOrdered";
-            _channel.BasicPublish("demo.exchange", "demo.queue.*", properties, bytes);
+            _channel.BasicPublish("product.exchange", "product.queue.*", properties, bytes);
         }
 
-        private void HandleMessage(string content)
+        private async Task HandleMessageAsync(string content, string type)
         {
-            // we just print this message   
+
+            switch (type)
+            {
+                case "ProductOrdered":
+                    await HandleProductOrderedAsync(content);
+                    break;
+                default:
+                    break;
+            }
             _logger.LogInformation($"consumer received {content}");
+        }
+
+        private async Task HandleProductOrderedAsync(string content)
+        {
+            var product = productRepo.GetProductByID(Int32.Parse(content));
+            int i = 32;
         }
 
         private void OnConsumerConsumerCancelled(object sender, ConsumerEventArgs e) { }

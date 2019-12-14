@@ -27,9 +27,8 @@ namespace FinalProductManager_ForSureThisTime.Controllers
         public IActionResult Get()
         {
             var products = _productRepository.GetProducts();
-
-            RabbitService rabbit = new RabbitService(new LoggerFactory());
-            rabbit.publishSomething("hey is this working");
+            //RabbitService rabbit = new RabbitService(_productRepository);
+            //rabbit.publishSomething("hey is this working");
             return new OkObjectResult(products);
         }
 
