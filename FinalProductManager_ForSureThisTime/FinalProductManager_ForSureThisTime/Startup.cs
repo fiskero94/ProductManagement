@@ -30,7 +30,6 @@ namespace FinalProductManager_ForSureThisTime
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            //services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddDbContext<ProductContext>(o => o.UseSqlServer(Configuration.GetConnectionString("ProductDB")));
             services.AddTransient<IProductRepository, ProductRepository>();
             services.AddHostedService<RabbitService>();
