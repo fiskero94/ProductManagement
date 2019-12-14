@@ -31,6 +31,8 @@ namespace OrderManager
             services.AddControllers();
             services.AddDbContext<OrderContext>(o => o.UseSqlServer(Configuration.GetConnectionString("OrderDB")));
             services.AddTransient<IOrderRepository, OrderRepository>();
+            services.AddDbContext<ProductContext>(o => o.UseSqlServer(Configuration.GetConnectionString("OrderDB")));
+            services.AddTransient<IProductRepository, ProductRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
