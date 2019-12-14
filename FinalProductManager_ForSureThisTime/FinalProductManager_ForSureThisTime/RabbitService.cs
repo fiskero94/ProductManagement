@@ -15,14 +15,11 @@ namespace FinalProductManager_ForSureThisTime
 {
     public class RabbitService : BackgroundService
     {
-        private readonly ILogger _logger;
         private IConnection _connection;
         private IModel _channel;
-        private readonly IProductRepository _productRepository;
 
-        public RabbitService(IProductRepository productRepository)
+        public RabbitService()
         {
-            _productRepository = productRepository;
             InitRabbitMQ();
         }
 
@@ -87,15 +84,15 @@ namespace FinalProductManager_ForSureThisTime
                 default:
                     break;
             }
-            _logger.LogInformation($"consumer received {content}");
         }
 
         private async Task HandleProductOrderedAsync(string content)
         {
-            var product = _productRepository.GetProductByID(int.Parse(content));
+            ProductRepository productRepository = ProductRepository.singletonRepo;
+            var product = productRepository.GetProductByID(int.Parse(content));
             product.Stock -= 1;
-            _productRepository.UpdateProduct(product);
-            _productRepository.Save();
+            productRepository.UpdateProduct(product);
+            productRepository.Save();
         }
 
         private void OnConsumerConsumerCancelled(object sender, ConsumerEventArgs e) { }
