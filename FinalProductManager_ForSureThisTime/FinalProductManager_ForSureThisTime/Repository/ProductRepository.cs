@@ -59,10 +59,10 @@ namespace FinalProductManager_ForSureThisTime.Repository
 
         public static ProductRepository GetRepository()
         {
-            DbContextOptionsBuilder<ProductContext> maybe = new DbContextOptionsBuilder<ProductContext>();
-            maybe.UseSqlServer(ProductContext.ConnectionString);
+            DbContextOptionsBuilder<ProductContext> options = new DbContextOptionsBuilder<ProductContext>();
+            options.UseSqlServer(ProductContext.ConnectionString);
 
-            return new ProductRepository(new ProductContext(maybe.Options));
+            return new ProductRepository(new ProductContext(options.Options));
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Hosting;
+using OrderManager.Repository;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System;
@@ -76,6 +77,12 @@ namespace OrderManager
                 case "ProductCreated":
                     await HandleProductCreatedAsync(content);
                     break;
+                case "ProductStockTooLow":
+                    await HandleProductStockTooLowAsync(content);
+                    break;
+                case "ProductOrderSuccess":
+                    await HandleProductOrderSuccessAsync(content);
+                    break;
                 default:
                     break;
             }
@@ -83,11 +90,17 @@ namespace OrderManager
 
         private async Task HandleProductCreatedAsync(string content)
         {
-            ProductRepository productRepository = ProductRepository.GetRepository();
-            var oldProduct = await productRepository.GetProductByID(int.Parse(content));
-            var updatedProduct = oldProduct;
-            updatedProduct.Stock -= 1;
-            await productRepository.UpdateProduct(oldProduct, updatedProduct);
+
+        }
+
+        private async Task HandleProductStockTooLowAsync(string content)
+        {
+            throw new Exception();
+        }
+
+        private async Task HandleProductOrderSuccessAsync(string content)
+        {
+
         }
 
         private void OnConsumerConsumerCancelled(object sender, ConsumerEventArgs e) { }

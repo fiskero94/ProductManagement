@@ -37,5 +37,13 @@ namespace OrderManager.Repository
         {
             await _dbContext.SaveChangesAsync();
         }
+
+        public static OrderRepository GetRepository()
+        {
+            DbContextOptionsBuilder<OrderContext> options = new DbContextOptionsBuilder<OrderContext>();
+            options.UseSqlServer(OrderContext.ConnectionString);
+
+            return new OrderRepository(new OrderContext(options.Options));
+        }
     }
 }

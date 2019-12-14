@@ -67,12 +67,20 @@ namespace FinalProductManager_ForSureThisTime
             return Task.CompletedTask;
         }
 
-        public void PublishStockTooLow(string message)
+        public void PublishProductStockTooLow(string message)
         {
                 byte[] bytes = System.Text.Encoding.UTF8.GetBytes(message);
                 IBasicProperties properties = _channel.CreateBasicProperties();
-                properties.Type = "ProductOrdered";
-                _channel.BasicPublish("product.exchange", "product.queue.*", properties, bytes);
+                properties.Type = "ProductStockTooLow";
+                _channel.BasicPublish("order.exchange", "order.queue.*", properties, bytes);
+        }
+
+        public void PublishProductOrderSuccess(string message)
+        {
+            byte[] bytes = System.Text.Encoding.UTF8.GetBytes(message);
+            IBasicProperties properties = _channel.CreateBasicProperties();
+            properties.Type = "ProductOrderSuccess";
+            _channel.BasicPublish("order.exchange", "order.queue.*", properties, bytes);
         }
 
         private async Task HandleMessageAsync(string content, string type)
@@ -93,13 +101,14 @@ namespace FinalProductManager_ForSureThisTime
             var oldProduct = await productRepository.GetProductByIDAsync(int.Parse(content));
             if(oldProduct.Stock < 1)
             {
-
+                PublishProductStockTooLow(oldProduct.Id.ToString());
             }
             else
             {
                 var updatedProduct = oldProduct;
                 updatedProduct.Stock -= 1;
                 await productRepository.UpdateProductAsync(oldProduct, updatedProduct);
+                PublishProductOrderSuccess(oldProduct.Id.ToString());
             }
         }
 
