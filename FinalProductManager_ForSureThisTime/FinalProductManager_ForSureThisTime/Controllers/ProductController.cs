@@ -24,53 +24,53 @@ namespace FinalProductManager_ForSureThisTime.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> GetAllAsync()
         {
-            var products = await _productRepository.GetProducts();
-            //RabbitService rabbit = new RabbitService();
-            //rabbit.PublishSomething("2");
+            var products = await _productRepository.GetAllProductsAsync();
+            RabbitService rabbit = new RabbitService();
+            rabbit.PublishSomething("2");
             return new OkObjectResult(products);
         }
 
         [HttpGet("{id}", Name = "Get")]
-        public async Task<IActionResult> Get(int id)
+        public async Task<IActionResult> GetAsync(int id)
         {
-            var product = await _productRepository.GetProductByID(id);
+            var product = await _productRepository.GetProductByIDAsync(id);
             return new OkObjectResult(product);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] Product product)
+        public async Task<IActionResult> PostAsync([FromBody] Product product)
         {
             using (var scope = new TransactionScope())
             {
-                await _productRepository.InsertProduct(product);
+                await _productRepository.InsertProductAsync(product);
                 scope.Complete();
-                return CreatedAtAction(nameof(Get), new { id = product.Id }, product);
+                return CreatedAtAction(nameof(GetAllAsync), new { id = product.Id }, product);
             }
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, [FromBody] Product product)
+        public async Task<IActionResult> PutAsync(int id, [FromBody] Product product)
         {
             if (product == null)
             {
                 return BadRequest("Product is null.");
             }
 
-            Product productToUpdate = await _productRepository.GetProductByID(id);
+            Product productToUpdate = await _productRepository.GetProductByIDAsync(id);
             if (productToUpdate == null)
             {
                 return NotFound("Product not found");
             }
-            await _productRepository.UpdateProduct(productToUpdate, product);
+            await _productRepository.UpdateProductAsync(productToUpdate, product);
             return new NoContentResult();
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> DeleteAsync(int id)
         {
-            await _productRepository.DeleteProduct(id);
+            await _productRepository.DeleteProductAsync(id);
             return new OkResult();
         }
     }

@@ -22,25 +22,25 @@ namespace OrderManager.Controllers
         }
 
         [HttpGet]
-        public IActionResult Get()
+        public async Task<IActionResult> GetAllAsync()
         {
-            var products = _orderRepository.GetProducts();
+            var products = await _orderRepository.GetAllProductsAsync();
             return new OkObjectResult(products);
         }
 
         [HttpGet("{id}", Name = "Get")]
-        public IActionResult Get(int id)
+        public async Task<IActionResult> GetAsync(int id)
         {
-            Order order = _orderRepository.GetOrderByID(id);
+            Order order = await _orderRepository.GetOrderByIDAsync(id);
             return new OkObjectResult(order);
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody] Order order)
+        public async Task<IActionResult> PostAsync([FromBody] Order order)
         {
             using (var scope = new TransactionScope())
             {
-                _orderRepository.InsertOrder(order);
+                await _orderRepository.InsertOrderAsync(order);
                 scope.Complete();
 
                 RabbitService rabbit = new RabbitService();

@@ -8,9 +8,9 @@ namespace OrderManager.Repository
 {
     public interface IOrderRepository
     {
-        IEnumerable<Order> GetProducts();
-        Order GetOrderByID(int OrderId);
-        void InsertOrder(Order order);
-        void Save();
+        Task<IEnumerable<Order>> GetAllProductsAsync();
+        Task<Order> GetOrderByIDAsync(int OrderId);
+        Task InsertOrderAsync(Order order);
+        Task SaveAsync();
     }
 }

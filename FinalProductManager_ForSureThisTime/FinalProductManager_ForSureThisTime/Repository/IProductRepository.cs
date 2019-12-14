@@ -8,11 +8,11 @@ namespace FinalProductManager_ForSureThisTime.Repository
 {
     public interface IProductRepository
     {
-        Task<IEnumerable<Product>> GetProducts();
-        Task<Product> GetProductByID(int ProductId);
-        Task InsertProduct(Product Product);
-        Task DeleteProduct(int ProductId);
-        Task UpdateProduct(Product oldProduct, Product updatedProduct);
-        Task Save();
+        Task<IEnumerable<Product>> GetAllProductsAsync();
+        Task<Product> GetProductByIDAsync(int ProductId);
+        Task InsertProductAsync(Product Product);
+        Task DeleteProductAsync(int ProductId);
+        Task UpdateProductAsync(Product oldProduct, Product updatedProduct);
+        Task SaveAsync();
     }
 }
