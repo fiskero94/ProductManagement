@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Hosting;
+using OrderManager.Model;
 using OrderManager.Repository;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
@@ -90,7 +91,12 @@ namespace OrderManager
 
         private async Task HandleProductCreatedAsync(string content)
         {
+            string[] productArray = content.Split(null);
             ProductRepository productRepository = ProductRepository.GetRepository();
+            Product product = new Product();
+            product.Id = int.Parse(productArray[0]);
+            product.Stock = int.Parse(productArray[1]);
+            await productRepository.InsertProductAsync(product);
         }
 
         private async Task HandleProductStockTooLowAsync(string content)
