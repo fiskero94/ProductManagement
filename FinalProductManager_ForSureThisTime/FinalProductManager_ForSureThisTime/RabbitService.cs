@@ -52,7 +52,7 @@ namespace FinalProductManager_ForSureThisTime
                 var content = System.Text.Encoding.UTF8.GetString(ea.Body);
 
                 // handle the received message  
-                await HandleMessageAsync(content, ea.BasicProperties.Type);
+                HandleMessageAsync(content, ea.BasicProperties.Type);
                 _channel.BasicAck(ea.DeliveryTag, false);
             };
 
@@ -73,20 +73,20 @@ namespace FinalProductManager_ForSureThisTime
             _channel.BasicPublish("product.exchange", "product.queue.*", properties, bytes);
         }
 
-        private async Task HandleMessageAsync(string content, string type)
+        private void HandleMessageAsync(string content, string type)
         {
 
             switch (type)
             {
                 case "ProductOrdered":
-                    await HandleProductOrderedAsync(content);
+                    HandleProductOrderedAsync(content);
                     break;
                 default:
                     break;
             }
         }
 
-        private async Task HandleProductOrderedAsync(string content)
+        private void HandleProductOrderedAsync(string content)
         {
             ProductRepository productRepository = ProductRepository.singletonRepo;
             var product = productRepository.GetProductByID(int.Parse(content));
