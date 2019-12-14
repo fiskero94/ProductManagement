@@ -64,6 +64,13 @@ namespace FinalProductManager_ForSureThisTime
             return Task.CompletedTask;
         }
 
+        public void publishSomething(string message)
+        {
+            byte[] bytes = System.Text.Encoding.UTF8.GetBytes(message);
+            IBasicProperties properties = _channel.CreateBasicProperties();
+            _channel.BasicPublish("demo.exchange", "demo.queue.*", properties, bytes);
+        }
+
         private void HandleMessage(string content)
         {
             // we just print this message   

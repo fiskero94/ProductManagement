@@ -7,6 +7,7 @@ using FinalProductManager_ForSureThisTime.Model;
 using FinalProductManager_ForSureThisTime.Repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace FinalProductManager_ForSureThisTime.Controllers
 {
@@ -26,6 +27,9 @@ namespace FinalProductManager_ForSureThisTime.Controllers
         public IActionResult Get()
         {
             var products = _productRepository.GetProducts();
+
+            RabbitService rabbit = new RabbitService(new LoggerFactory());
+            rabbit.publishSomething("hey is this working");
             return new OkObjectResult(products);
         }
 
