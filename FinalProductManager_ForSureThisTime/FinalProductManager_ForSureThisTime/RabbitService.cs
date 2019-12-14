@@ -92,8 +92,10 @@ namespace FinalProductManager_ForSureThisTime
 
         private async Task HandleProductOrderedAsync(string content)
         {
-            var product = productRepo.GetProductByID(Int32.Parse(content));
-            int i = 32;
+            var product = productRepo.GetProductByID(int.Parse(content));
+            product.Stock -= 1;
+            productRepo.UpdateProduct(product);
+            productRepo.Save();
         }
 
         private void OnConsumerConsumerCancelled(object sender, ConsumerEventArgs e) { }
