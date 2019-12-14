@@ -46,7 +46,7 @@ namespace OrderManager.Controllers
                 RabbitService rabbit = new RabbitService();
                 rabbit.PublishProductOrdered(order.Id);
 
-                return CreatedAtAction(nameof(Get), new { id = order.Id }, order);
+                return CreatedAtAction(nameof(GetAsync), new { id = order.Id }, order);
             }
         }
     }

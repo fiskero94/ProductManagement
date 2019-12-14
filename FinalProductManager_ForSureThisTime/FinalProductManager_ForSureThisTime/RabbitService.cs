@@ -90,7 +90,7 @@ namespace FinalProductManager_ForSureThisTime
         private async Task HandleProductOrderedAsync(string content)
         {
             ProductRepository productRepository = ProductRepository.GetRepository();
-            var oldProduct = await productRepository.GetProductByID(int.Parse(content));
+            var oldProduct = await productRepository.GetProductByIDAsync(int.Parse(content));
             if(oldProduct.Stock < 1)
             {
 
@@ -99,7 +99,7 @@ namespace FinalProductManager_ForSureThisTime
             {
                 var updatedProduct = oldProduct;
                 updatedProduct.Stock -= 1;
-                await productRepository.UpdateProduct(oldProduct, updatedProduct);
+                await productRepository.UpdateProductAsync(oldProduct, updatedProduct);
             }
         }
 

@@ -27,8 +27,8 @@ namespace FinalProductManager_ForSureThisTime.Controllers
         public async Task<IActionResult> GetAllAsync()
         {
             var products = await _productRepository.GetAllProductsAsync();
-            RabbitService rabbit = new RabbitService();
-            rabbit.PublishSomething("2");
+            //RabbitService rabbit = new RabbitService();
+            //rabbit.PublishSomething("2");
             return new OkObjectResult(products);
         }
 
