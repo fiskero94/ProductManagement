@@ -14,8 +14,9 @@ namespace OrderTests
     public class OrderControllerTest
     {
         [TestMethod]
-        public async Task TestMethod1()
+        public async Task OrderController_GetAsync_Ok()
         {
+            // Arrange
             Mock<IRepository<Product>> productRepositoryMock = new Mock<IRepository<Product>>();
             Mock<IRepository<Order>> orderRepositoryMock = new Mock<IRepository<Order>>();
             Mock<IRabbitMQMessenger> messengerMock = new Mock<IRabbitMQMessenger>();
@@ -31,10 +32,12 @@ namespace OrderTests
                 ProductId = productId
             }));
 
+            // Act
             IActionResult result = await controller.GetAsync(1);
+
+            // Assert
             Assert.IsInstanceOfType(result, typeof(OkObjectResult));
             Assert.AreEqual(200, (result as OkObjectResult).StatusCode);
-
             Order order = (Order)(result as OkObjectResult).Value;
             Assert.AreEqual(date, order.Date);
             Assert.AreEqual(orderId, order.OrderId);
