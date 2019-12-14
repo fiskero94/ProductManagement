@@ -12,8 +12,11 @@ namespace FinalProductManager_ForSureThisTime.Repository
     {
         private readonly ProductContext _dbContext;
 
+        public static ProductRepository singletonRepo;
+
         public ProductRepository(ProductContext dbContext)
         {
+            singletonRepo = this;
             _dbContext = dbContext;
         }
         public void DeleteProduct(int productId)
