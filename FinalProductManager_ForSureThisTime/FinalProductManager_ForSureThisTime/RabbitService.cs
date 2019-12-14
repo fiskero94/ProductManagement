@@ -18,11 +18,11 @@ namespace FinalProductManager_ForSureThisTime
         private readonly ILogger _logger;
         private IConnection _connection;
         private IModel _channel;
-        private ProductRepository productRepo;
+        private readonly IProductRepository _productRepository;
 
-        public RabbitService(ProductRepository productRepository)
+        public RabbitService(IProductRepository productRepository)
         {
-            productRepo = productRepository;
+            _productRepository = productRepository;
             InitRabbitMQ();
         }
 
@@ -92,10 +92,10 @@ namespace FinalProductManager_ForSureThisTime
 
         private async Task HandleProductOrderedAsync(string content)
         {
-            var product = productRepo.GetProductByID(int.Parse(content));
+            var product = _productRepository.GetProductByID(int.Parse(content));
             product.Stock -= 1;
-            productRepo.UpdateProduct(product);
-            productRepo.Save();
+            _productRepository.UpdateProduct(product);
+            _productRepository.Save();
         }
 
         private void OnConsumerConsumerCancelled(object sender, ConsumerEventArgs e) { }
