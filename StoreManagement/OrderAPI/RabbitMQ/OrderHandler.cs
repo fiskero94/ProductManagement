@@ -9,9 +9,9 @@ namespace OrderAPI.RabbitMQ
 {
     public class OrderHandler : IRabbitMQHandler
     {
-        private readonly Repository<Product> _productRepository;
+        private readonly IRepository<Product> _productRepository;
 
-        public OrderHandler(Repository<Product> productRepository)
+        public OrderHandler(IRepository<Product> productRepository)
         {
             _productRepository = productRepository;
         }

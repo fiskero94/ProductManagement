@@ -8,7 +8,7 @@ using RabbitMQ.Client;
 
 namespace Infrastructure.Messaging
 {
-    public class RabbitMQMessenger
+    public class RabbitMQMessenger : IRabbitMQMessenger
     {
         private readonly RabbitMQConfig _config;
         private readonly JsonSerializerSettings _serializerSettings;

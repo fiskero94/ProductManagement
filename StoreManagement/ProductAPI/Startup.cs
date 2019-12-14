@@ -25,9 +25,9 @@ namespace ProductAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ProductContext>(options => options.UseSqlServer(Configuration["ConnectionString:ProductDatabase"]));
-            services.AddScoped<Repository<Product>, ProductRepository>();
+            services.AddScoped<IRepository<Product>, ProductRepository>();
             services.AddSingleton((service) => new RabbitMQConfig("ProductAPI"));
-            services.AddTransient<RabbitMQMessenger>();
+            services.AddTransient<IRabbitMQMessenger, RabbitMQMessenger>();
             services.AddSingleton<IRabbitMQHandler, ProductHandler>();
             services.AddHostedService<RabbitMQListener>();
             services.AddControllers();

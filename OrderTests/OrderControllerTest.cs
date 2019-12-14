@@ -9,7 +9,7 @@ namespace OrderTests
         [TestMethod]
         public void TestMethod1()
         {
-            OrderController controller = new OrderController();
+            //OrderController controller = new OrderController();
         }
     }
 }

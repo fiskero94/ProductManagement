@@ -9,10 +9,10 @@ namespace ProductAPI.RabbitMQ
 {
     public class ProductHandler : IRabbitMQHandler
     {
-        private readonly Repository<Product> _productRepository;
-        private readonly RabbitMQMessenger _messenger;
+        private readonly IRepository<Product> _productRepository;
+        private readonly IRabbitMQMessenger _messenger;
 
-        public ProductHandler(RabbitMQMessenger messenger, Repository<Product> productRepository)
+        public ProductHandler(IRabbitMQMessenger messenger, IRepository<Product> productRepository)
         {
             _productRepository = productRepository;
             _messenger = messenger;

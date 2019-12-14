@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.DataAccess
 {
-    public abstract class Repository<T>
+    public abstract class Repository<T> : IRepository<T>
     {
         public Repository(DbContext context)
         {

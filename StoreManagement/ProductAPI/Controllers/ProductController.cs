@@ -10,10 +10,10 @@ namespace ProductAPI.Controllers
     [ApiController]
     public class ProductController : ControllerBase
     {
-        private readonly Repository<Product> _productRepository;
-        private readonly RabbitMQMessenger _messenger;
+        private readonly IRepository<Product> _productRepository;
+        private readonly IRabbitMQMessenger _messenger;
 
-        public ProductController(Repository<Product> productRepository, RabbitMQMessenger messenger)
+        public ProductController(IRepository<Product> productRepository, IRabbitMQMessenger messenger)
         {
             _productRepository = productRepository;
             _messenger = messenger;

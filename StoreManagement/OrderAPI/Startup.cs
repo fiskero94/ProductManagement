@@ -27,10 +27,10 @@ namespace OrderAPI
             services.AddMvc(options => options.EnableEndpointRouting = false).AddNewtonsoftJson();
             services.AddDbContext<OrderContext>(options => options.UseSqlServer(Configuration["ConnectionString:OrderDatabase"]));
             services.AddDbContext<ProductContext>(options => options.UseSqlServer(Configuration["ConnectionString:OrderDatabase"]));
-            services.AddScoped<Repository<Order>, OrderRepository>();
-            services.AddScoped<Repository<Product>, ProductRepository>();
+            services.AddScoped<IRepository<Order>, OrderRepository>();
+            services.AddScoped<IRepository<Product>, ProductRepository>();
             services.AddSingleton((service) => new RabbitMQConfig("OrderAPI"));
-            services.AddTransient<RabbitMQMessenger>();
+            services.AddTransient<IRabbitMQMessenger, RabbitMQMessenger>();
             services.AddSingleton<IRabbitMQHandler, OrderHandler>();
             services.AddHostedService<RabbitMQListener>();
             services.AddControllers();

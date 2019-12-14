@@ -12,11 +12,11 @@ namespace OrderAPI.Controllers
     [ApiController]
     public class OrderController : ControllerBase
     {
-        private readonly Repository<Order> _orderRepository;
-        private readonly Repository<Product> _productRepository;
-        private readonly RabbitMQMessenger _messenger;
+        private readonly IRepository<Order> _orderRepository;
+        private readonly IRepository<Product> _productRepository;
+        private readonly IRabbitMQMessenger _messenger;
 
-        public OrderController(Repository<Order> orderRepository, Repository<Product> productRepository, RabbitMQMessenger messenger)
+        public OrderController(IRepository<Order> orderRepository, IRepository<Product> productRepository, IRabbitMQMessenger messenger)
         {
             _orderRepository = orderRepository;
             _productRepository = productRepository;
