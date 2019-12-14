@@ -8,6 +8,7 @@ namespace ProductTests
         [TestMethod]
         public void TestMethod1()
         {
+
         }
     }
 }
