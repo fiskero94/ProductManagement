@@ -68,6 +68,7 @@ namespace FinalProductManager_ForSureThisTime
         {
             byte[] bytes = System.Text.Encoding.UTF8.GetBytes(message);
             IBasicProperties properties = _channel.CreateBasicProperties();
+            properties.Type = "ProductOrdered";
             _channel.BasicPublish("demo.exchange", "demo.queue.*", properties, bytes);
         }
 
