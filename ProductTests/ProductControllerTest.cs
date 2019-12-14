@@ -1,14 +1,13 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace OrderTests
+namespace ProductTests
 {
     [TestClass]
-    public class UnitTest1
+    public class ProductControllerTest
     {
         [TestMethod]
         public void TestMethod1()
         {
-
         }
     }
 }

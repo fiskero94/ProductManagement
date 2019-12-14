@@ -1,13 +1,15 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using OrderAPI.Controllers;
 
-namespace ProductTests
+namespace OrderTests
 {
     [TestClass]
-    public class UnitTest1
+    public class OrderControllerTest
     {
         [TestMethod]
         public void TestMethod1()
         {
+            OrderController controller = new OrderController();
         }
     }
 }
