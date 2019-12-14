@@ -17,35 +17,35 @@ namespace FinalProductManager_ForSureThisTime.Repository
             _dbContext = dbContext;
         }
 
-        public async Task DeleteProduct(int productId)
+        public async Task DeleteProductAsync(int productId)
         {
             var product = _dbContext.Products.Find(productId);
             _dbContext.Products.Remove(product);
-            await Save();
+            await SaveAsync();
         }
 
-        public async Task<Product> GetProductByID(int productId)
+        public async Task<Product> GetProductByIDAsync(int productId)
         {
             return await _dbContext.Products.FindAsync(productId);
         }
 
-        public async Task<IEnumerable<Product>> GetProducts()
+        public async Task<IEnumerable<Product>> GetAllProductsAsync()
         {
             return await _dbContext.Products.ToListAsync();
         }
 
-        public async Task InsertProduct(Product product)
+        public async Task InsertProductAsync(Product product)
         {
             _dbContext.Add(product);
-            await Save();
+            await SaveAsync();
         }
 
-        public async Task Save()
+        public async Task SaveAsync()
         {
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task UpdateProduct(Product oldProduct, Product updatedProduct)
+        public async Task UpdateProductAsync(Product oldProduct, Product updatedProduct)
         {
             oldProduct.Name = updatedProduct.Name;
             oldProduct.Price = updatedProduct.Price;
@@ -54,7 +54,7 @@ namespace FinalProductManager_ForSureThisTime.Repository
             oldProduct.CategoryId = updatedProduct.CategoryId;
 
             //_dbContext.Entry(product).State = EntityState.Modified;
-            await Save();
+            await SaveAsync();
         }
 
         public static ProductRepository GetRepository()

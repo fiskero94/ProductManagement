@@ -90,10 +90,10 @@ namespace FinalProductManager_ForSureThisTime
         private async Task HandleProductOrderedAsync(string content)
         {
             ProductRepository productRepository = ProductRepository.GetRepository();
-            var oldProduct = await productRepository.GetProductByID(int.Parse(content));
+            var oldProduct = await productRepository.GetProductByIDAsync(int.Parse(content));
             var updatedProduct = oldProduct;
             updatedProduct.Stock -= 1;
-            await productRepository.UpdateProduct(oldProduct, updatedProduct);
+            await productRepository.UpdateProductAsync(oldProduct, updatedProduct);
         }
 
         private void OnConsumerConsumerCancelled(object sender, ConsumerEventArgs e) { }

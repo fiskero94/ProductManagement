@@ -1,4 +1,5 @@
-﻿using OrderManager.DBContexts;
+﻿using Microsoft.EntityFrameworkCore;
+using OrderManager.DBContexts;
 using OrderManager.Model;
 using System;
 using System.Collections.Generic;
@@ -16,25 +17,25 @@ namespace OrderManager.Repository
             _dbContext = orderContext;
         }
 
-        public IEnumerable<Order> GetProducts()
+        public async Task<IEnumerable<Order>> GetAllProductsAsync()
         {
-            return _dbContext.Orders.ToList();
+            return await _dbContext.Orders.ToListAsync();
         }
 
-        public Order GetOrderByID(int OrderId)
+        public async Task<Order> GetOrderByIDAsync(int OrderId)
         {
-            return _dbContext.Orders.Find(OrderId);
+            return await _dbContext.Orders.FindAsync(OrderId);
         }
 
-        public void InsertOrder(Order order)
+        public async Task InsertOrderAsync(Order order)
         {
             _dbContext.Add(order);
-            Save();
+            await SaveAsync();
         }
 
-        public void Save()
+        public async Task SaveAsync()
         {
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
         }
     }
 }
