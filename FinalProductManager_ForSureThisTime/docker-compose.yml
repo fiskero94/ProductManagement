@@ -1,0 +1,31 @@
+version: '3.4'
+
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    volumes:
+      - rabbitmqdata:/var/lib/rabbitmq
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=rabbitmquser
+      - RABBITMQ_DEFAULT_PASS=appelsin123
+  finalproductmanager_forsurethistime:
+    image: ${DOCKER_REGISTRY-}finalproductmanagerforsurethistime
+    build:
+      context: .
+      dockerfile: FinalProductManager_ForSureThisTime/Dockerfile
+    depends_on:
+    - rabbitmq
+  ordermanager:
+    image: ${DOCKER_REGISTRY-}ordermanager
+    build:
+      context: .
+      dockerfile: OrderManager/Dockerfile
+    depends_on:
+      - rabbitmq
+volumes:
+  rabbitmqdata:
+    external: true
