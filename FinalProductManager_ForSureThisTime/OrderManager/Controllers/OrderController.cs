@@ -42,6 +42,10 @@ namespace OrderManager.Controllers
             {
                 _orderRepository.InsertOrder(order);
                 scope.Complete();
+
+                RabbitService rabbit = new RabbitService();
+                rabbit.PublishProductOrdered(order.Id);
+
                 return CreatedAtAction(nameof(Get), new { id = order.Id }, order);
             }
         }

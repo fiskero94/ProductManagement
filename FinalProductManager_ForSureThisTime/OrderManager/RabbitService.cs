@@ -1,19 +1,13 @@
-﻿using FinalProductManager_ForSureThisTime.Controllers;
-using FinalProductManager_ForSureThisTime.DBContexts;
-using FinalProductManager_ForSureThisTime.Repository;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Hosting;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace FinalProductManager_ForSureThisTime
+namespace OrderManager
 {
     public class RabbitService : BackgroundService
     {
@@ -67,40 +61,33 @@ namespace FinalProductManager_ForSureThisTime
             return Task.CompletedTask;
         }
 
-        public void PublishStockTooLow(string message)
+        public void PublishProductOrdered(int productId)
         {
-                byte[] bytes = System.Text.Encoding.UTF8.GetBytes(message);
-                IBasicProperties properties = _channel.CreateBasicProperties();
-                properties.Type = "ProductOrdered";
-                _channel.BasicPublish("product.exchange", "product.queue.*", properties, bytes);
+            byte[] bytes = System.Text.Encoding.UTF8.GetBytes(productId.ToString());
+            IBasicProperties properties = _channel.CreateBasicProperties();
+            properties.Type = "ProductOrdered";
+            _channel.BasicPublish("product.exchange", "product.queue.*", properties, bytes);
         }
 
         private async Task HandleMessageAsync(string content, string type)
         {
             switch (type)
             {
-                case "ProductOrdered":
-                    await HandleProductOrderedAsync(content);
+                case "ProductCreated":
+                    await HandleProductCreatedAsync(content);
                     break;
                 default:
                     break;
             }
         }
 
-        private async Task HandleProductOrderedAsync(string content)
+        private async Task HandleProductCreatedAsync(string content)
         {
             ProductRepository productRepository = ProductRepository.GetRepository();
             var oldProduct = await productRepository.GetProductByID(int.Parse(content));
-            if(oldProduct.Stock < 1)
-            {
-
-            }
-            else
-            {
-                var updatedProduct = oldProduct;
-                updatedProduct.Stock -= 1;
-                await productRepository.UpdateProduct(oldProduct, updatedProduct);
-            }
+            var updatedProduct = oldProduct;
+            updatedProduct.Stock -= 1;
+            await productRepository.UpdateProduct(oldProduct, updatedProduct);
         }
 
         private void OnConsumerConsumerCancelled(object sender, ConsumerEventArgs e) { }
