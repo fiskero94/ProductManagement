@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Hosting;
+using OrderManager.Repository;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System;
@@ -84,10 +85,10 @@ namespace OrderManager
         private async Task HandleProductCreatedAsync(string content)
         {
             ProductRepository productRepository = ProductRepository.GetRepository();
-            var oldProduct = await productRepository.GetProductByID(int.Parse(content));
+            var oldProduct = await productRepository.GetProductByIDAsync(int.Parse(content));
             var updatedProduct = oldProduct;
             updatedProduct.Stock -= 1;
-            await productRepository.UpdateProduct(oldProduct, updatedProduct);
+            await productRepository.UpdateProductAsync(oldProduct, updatedProduct);
         }
 
         private void OnConsumerConsumerCancelled(object sender, ConsumerEventArgs e) { }

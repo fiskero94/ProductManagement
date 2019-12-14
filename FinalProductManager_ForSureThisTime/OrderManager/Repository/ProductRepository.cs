@@ -1,14 +1,14 @@
-﻿using FinalProductManager_ForSureThisTime.DBContexts;
-using FinalProductManager_ForSureThisTime.Model;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using OrderManager.DBContexts;
+using OrderManager.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace FinalProductManager_ForSureThisTime.Repository
+namespace OrderManager.Repository
 {
-    public class ProductRepository : IProductRepository
+    public class ProductRepository
     {
         private readonly ProductContext _dbContext;
 
@@ -17,21 +17,9 @@ namespace FinalProductManager_ForSureThisTime.Repository
             _dbContext = dbContext;
         }
 
-        public async Task DeleteProductAsync(int productId)
-        {
-            var product = _dbContext.Products.Find(productId);
-            _dbContext.Products.Remove(product);
-            await SaveAsync();
-        }
-
         public async Task<Product> GetProductByIDAsync(int productId)
         {
             return await _dbContext.Products.FindAsync(productId);
-        }
-
-        public async Task<IEnumerable<Product>> GetAllProductsAsync()
-        {
-            return await _dbContext.Products.ToListAsync();
         }
 
         public async Task InsertProductAsync(Product product)
@@ -40,22 +28,16 @@ namespace FinalProductManager_ForSureThisTime.Repository
             await SaveAsync();
         }
 
+        public async Task UpdateProductAsync(Product oldProduct, Product updatedProduct)
+        {
+            oldProduct.Stock = updatedProduct.Stock;
+            await SaveAsync();
+        }
+
         public async Task SaveAsync()
         {
             await _dbContext.SaveChangesAsync();
         }
-
-        public async Task UpdateProductAsync(Product oldProduct, Product updatedProduct)
-        {
-            oldProduct.Name = updatedProduct.Name;
-            oldProduct.Price = updatedProduct.Price;
-            oldProduct.Stock = updatedProduct.Stock;
-            oldProduct.Description = updatedProduct.Description;
-            oldProduct.CategoryId = updatedProduct.CategoryId;
-
-            await SaveAsync();
-        }
-
         public static ProductRepository GetRepository()
         {
             DbContextOptionsBuilder<ProductContext> opt = new DbContextOptionsBuilder<ProductContext>();
