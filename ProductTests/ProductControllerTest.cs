@@ -125,5 +125,56 @@ namespace ProductTests
             Assert.AreEqual(productId, product.ProductId);
             messengerMock.Verify(messenger => messenger.PublishAsync("ProductCreated", It.IsAny<Product>()), Times.Once);
         }
-}
+
+        [TestMethod]
+        public async Task ProductController_DeleteAsync_NoContent()
+        {
+            //Arrange
+            Mock<IRepository<Product>> productRepositoryMock = new Mock<IRepository<Product>>();
+            Mock<IRabbitMQMessenger> messengerMock = new Mock<IRabbitMQMessenger>();
+            ProductController controller = new ProductController(productRepositoryMock.Object, messengerMock.Object);
+
+            int productId = 1;
+            Product product = new Product()
+            {
+                ProductId = productId,
+                Name = "Product",
+                Price = 100.00M,
+                Stock = 10,
+            };
+
+            productRepositoryMock.Setup(repo => repo.GetAsync(productId)).Returns(Task.FromResult(product));
+
+            // Act
+            IActionResult result = await controller.DeleteAsync(productId);
+
+            // Assert
+            Assert.IsInstanceOfType(result, typeof(NoContentResult));
+            Assert.AreEqual(204, (result as NoContentResult).StatusCode);
+            productRepositoryMock.Verify(mock => mock.DeleteAsync(product), Times.Once);
+            messengerMock.Verify(mock => mock.PublishAsync("ProductDeleted", product), Times.Once);
+        }
+
+        [TestMethod]
+        public async Task ProductController_DeleteAsync_NotFound()
+        {
+            //Arrange
+            Mock<IRepository<Product>> productRepositoryMock = new Mock<IRepository<Product>>();
+            Mock<IRabbitMQMessenger> messengerMock = new Mock<IRabbitMQMessenger>();
+            ProductController controller = new ProductController(productRepositoryMock.Object, messengerMock.Object);
+
+            int productId = 0;
+            Product product = null;
+
+            productRepositoryMock.Setup(repo => repo.GetAsync(productId)).Returns(Task.FromResult(product));
+
+            // Act
+            IActionResult result = await controller.DeleteAsync(1);
+
+            // Assert
+            Assert.IsInstanceOfType(result, typeof(NotFoundObjectResult));
+            Assert.AreEqual(404, (result as NotFoundObjectResult).StatusCode);
+            Assert.AreEqual("The product could not be found.", (result as NotFoundObjectResult).Value);
+        }
     }
+}
