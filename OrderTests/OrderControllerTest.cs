@@ -131,5 +131,25 @@ namespace OrderTests
             Assert.AreEqual(204, (result as NoContentResult).StatusCode);
             orderRepositoryMock.Verify(mock => mock.DeleteAsync(order), Times.Once);
         }
+
+        [TestMethod]
+        public async Task OrderController_DeleteAsync_NotFound()
+        {
+            // Arrange
+            Mock<IRepository<Product>> productRepositoryMock = new Mock<IRepository<Product>>();
+            Mock<IRepository<Order>> orderRepositoryMock = new Mock<IRepository<Order>>();
+            Mock<IRabbitMQMessenger> messengerMock = new Mock<IRabbitMQMessenger>();
+            OrderController controller = new OrderController(orderRepositoryMock.Object, productRepositoryMock.Object, messengerMock.Object);
+            Order order = new Order();
+            order = null;
+            orderRepositoryMock.Setup(repo => repo.GetAsync(1)).Returns(Task.FromResult(order));
+
+            // Act
+            IActionResult result = await controller.DeleteAsync(1);
+
+            // Assert
+            Assert.IsInstanceOfType(result, typeof(NotFoundObjectResult));
+            Assert.AreEqual(404, (result as NotFoundObjectResult).StatusCode);
+        }
     }
 }
