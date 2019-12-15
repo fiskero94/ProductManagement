@@ -103,22 +103,6 @@ namespace OrderTests
             Assert.AreEqual(2, actualOrders.Count);
         }
 
-        //[HttpDelete("{id}")]
-        //public async Task<IActionResult> DeleteAsync(int id)
-        //{
-        //    Order order = await _orderRepository.GetAsync(id);
-
-        //    if (order == null)
-        //    {
-        //        return NotFound("The order could not be found.");
-        //    }
-
-        //    await _orderRepository.DeleteAsync(order);
-        //    return NoContent();
-        //}
-
-
-
         [TestMethod]
         public async Task OrderController_DeleteAsync_NoContent()
         {
