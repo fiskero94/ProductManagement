@@ -103,6 +103,49 @@ namespace OrderTests
             Assert.AreEqual(2, actualOrders.Count);
         }
 
+        //[HttpDelete("{id}")]
+        //public async Task<IActionResult> DeleteAsync(int id)
+        //{
+        //    Order order = await _orderRepository.GetAsync(id);
 
+        //    if (order == null)
+        //    {
+        //        return NotFound("The order could not be found.");
+        //    }
+
+        //    await _orderRepository.DeleteAsync(order);
+        //    return NoContent();
+        //}
+
+
+
+        [TestMethod]
+        public async Task OrderController_DeleteAsync_NoContent()
+        {
+            // Arrange
+            Mock<IRepository<Product>> productRepositoryMock = new Mock<IRepository<Product>>();
+            Mock<IRepository<Order>> orderRepositoryMock = new Mock<IRepository<Order>>();
+            Mock<IRabbitMQMessenger> messengerMock = new Mock<IRabbitMQMessenger>();
+            OrderController controller = new OrderController(orderRepositoryMock.Object, productRepositoryMock.Object, messengerMock.Object);
+            DateTime date = DateTime.Parse("08/18/2018 07:22:16");
+            int orderId = 1;
+            int productId = 2;
+
+            Order order = new Order();
+            order.Date = date;
+            order.OrderId = orderId;
+            order.ProductId = productId;
+
+            orderRepositoryMock.Setup(repo => repo.GetAsync(1)).Returns(Task.FromResult(order));
+            orderRepositoryMock.Setup(repo => repo.DeleteAsync(order)).Returns(Task.FromResult(true));
+
+            // Act
+            IActionResult result = await controller.DeleteAsync(1);
+
+            // Assert
+            Assert.IsInstanceOfType(result, typeof(NoContentResult));
+            Assert.AreEqual(204, (result as NoContentResult).StatusCode);
+            orderRepositoryMock.Verify(mock => mock.DeleteAsync(order), Times.Once);
+        }
     }
 }
