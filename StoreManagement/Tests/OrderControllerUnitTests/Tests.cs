@@ -11,10 +11,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace OrderTests
+namespace OrderControllerUnitTests
 {
     [TestClass]
-    public class OrderControllerTest
+    public class Tests
     {
         [TestMethod]
         public async Task OrderController_GetAsync_Ok()
@@ -86,7 +86,7 @@ namespace OrderTests
             int productId2 = 3;
             Order order1 = new Order() { Date = orderDate1, OrderId = orderId1, ProductId = productId1 };
             Order order2 = new Order() { Date = orderDate2, OrderId = orderId2, ProductId = productId2 };
-            IEnumerable<Order> orders = new List<Order>() { order1, order2};
+            IEnumerable<Order> orders = new List<Order>() { order1, order2 };
 
             orderRepositoryMock.Setup(repo => repo.GetAllAsync()).Returns(Task.FromResult(orders));
 
@@ -191,7 +191,7 @@ namespace OrderTests
             int productStock = 12;
             OrderViewModel orderViewModel = new OrderViewModel { ProductId = productId };
             Order order = new Order { Date = date, OrderId = orderId, ProductId = productId };
-            Product product = new Product { ProductId = productId, Name = productName, Price = productPrice, Stock = productStock};
+            Product product = new Product { ProductId = productId, Name = productName, Price = productPrice, Stock = productStock };
 
             orderRepositoryMock.Setup(repo => repo.GetAsync(orderId)).Returns(Task.FromResult(order));
             productRepositoryMock.Setup(repo => repo.GetAsync(productId)).Returns(Task.FromResult(product));
@@ -317,7 +317,7 @@ namespace OrderTests
             Mock<IRepository<Order>> orderRepositoryMock = new Mock<IRepository<Order>>();
             Mock<IRabbitMQMessenger> messengerMock = new Mock<IRabbitMQMessenger>();
             OrderController controller = new OrderController(orderRepositoryMock.Object, productRepositoryMock.Object, messengerMock.Object);
-            
+
             int productId = 1;
             Product product = null;
             OrderViewModel viewModel = new OrderViewModel() { ProductId = productId };

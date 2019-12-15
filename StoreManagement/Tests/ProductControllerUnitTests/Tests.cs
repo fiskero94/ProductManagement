@@ -9,10 +9,10 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace ProductTests
+namespace ProductControllerUnitTests
 {
     [TestClass]
-    public class ProductControllerTest
+    public class Tests
     {
         [TestMethod]
         public async Task ProductController_GetAllAsync_Ok()
@@ -255,7 +255,6 @@ namespace ProductTests
             Assert.IsInstanceOfType(result, typeof(BadRequestObjectResult));
             Assert.AreEqual(400, (result as BadRequestObjectResult).StatusCode);
             Assert.AreEqual("Product is null.", (result as BadRequestObjectResult).Value);
-
         }
 
         [TestMethod]
