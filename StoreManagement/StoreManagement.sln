@@ -21,9 +21,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{AE63
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{D2996E83-EE6E-4F8B-AFFB-7BB6F81D3A23}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderControllerUnitTests", "Tests\OrderControllerUnitTests\OrderControllerUnitTests.csproj", "{EE53C0B9-2E91-4391-B40F-CE7B7C1C5DFB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OrderControllerUnitTests", "Tests\OrderControllerUnitTests\OrderControllerUnitTests.csproj", "{EE53C0B9-2E91-4391-B40F-CE7B7C1C5DFB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductControllerUnitTests", "Tests\ProductControllerUnitTests\ProductControllerUnitTests.csproj", "{225A523A-8351-4F2E-9B16-5E0EEB6812C3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProductControllerUnitTests", "Tests\ProductControllerUnitTests\ProductControllerUnitTests.csproj", "{225A523A-8351-4F2E-9B16-5E0EEB6812C3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
