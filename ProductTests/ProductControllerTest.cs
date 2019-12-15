@@ -22,11 +22,11 @@ namespace ProductTests
             Mock<IRepository<Product>> productRepositoryMock = new Mock<IRepository<Product>>();
             Mock<IRabbitMQMessenger> messengerMock = new Mock<IRabbitMQMessenger>();
             ProductController controller = new ProductController(productRepositoryMock.Object, messengerMock.Object);
-           
+
             var product1 = new Product() { Name = "Product", Price = 5, ProductId = 1, Stock = 5 };
             var product2 = new Product() { Name = "Product2", Price = 10, ProductId = 2, Stock = 10 };
             IEnumerable<Product> list = new List<Product>() { product1, product2 };
-            
+
             productRepositoryMock.Setup(repo => repo.GetAllAsync()).Returns(Task.FromResult(list));
 
             // Act
@@ -54,10 +54,10 @@ namespace ProductTests
 
             productRepositoryMock.Setup(repo => repo.GetAsync(1)).Returns(Task.FromResult(new Product()
             {
-                 Name = name,
-                 Price = price,
-                 ProductId = productId,
-                 Stock = stock
+                Name = name,
+                Price = price,
+                ProductId = productId,
+                Stock = stock
             }));
 
             //Act
@@ -125,5 +125,28 @@ namespace ProductTests
             Assert.AreEqual(productId, product.ProductId);
             messengerMock.Verify(messenger => messenger.PublishAsync("ProductCreated", It.IsAny<Product>()), Times.Once);
         }
-}
+
+        [TestMethod]
+        public async Task ProductController_PostAsync_NotFound()
+        {
+            //Arrange
+            Mock<IRepository<Product>> productRepositoryMock = new Mock<IRepository<Product>>();
+            Mock<IRabbitMQMessenger> messengerMock = new Mock<IRabbitMQMessenger>();
+            ProductController controller = new ProductController(productRepositoryMock.Object, messengerMock.Object);
+
+            int productId = 1;
+            Product product = null;
+
+            productRepositoryMock.Setup(repo => repo.GetAsync(productId)).Returns(Task.FromResult(product));
+
+            // Act
+            IActionResult result = await controller.PostAsync(product);
+
+            // Assert
+            Assert.IsInstanceOfType(result, typeof(BadRequestObjectResult));
+            Assert.AreEqual(400, (result as BadRequestObjectResult).StatusCode);
+            Assert.AreEqual("Product is null.", (result as BadRequestObjectResult).Value);
+        }
     }
+}
+
