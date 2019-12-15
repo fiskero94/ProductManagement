@@ -199,5 +199,46 @@ namespace ProductTests
             Assert.AreEqual("Product is null.", (result as BadRequestObjectResult).Value);
         }
 
+        [TestMethod]
+        public async Task ProductController_PutAsync_NoContent()
+        {
+            //Arrange
+            Mock<IRepository<Product>> productRepositoryMock = new Mock<IRepository<Product>>();
+            Mock<IRabbitMQMessenger> messengerMock = new Mock<IRabbitMQMessenger>();
+            ProductController controller = new ProductController(productRepositoryMock.Object, messengerMock.Object);
+
+            // Act
+
+            // Assert
+
+        }
+
+        [TestMethod]
+        public async Task ProductController_PutAsync_BadRequest()
+        {
+            //Arrange
+            Mock<IRepository<Product>> productRepositoryMock = new Mock<IRepository<Product>>();
+            Mock<IRabbitMQMessenger> messengerMock = new Mock<IRabbitMQMessenger>();
+            ProductController controller = new ProductController(productRepositoryMock.Object, messengerMock.Object);
+
+            // Act
+
+            // Assert
+
+        }
+
+        [TestMethod]
+        public async Task ProductController_PutAsync_NotFound()
+        {
+            //Arrange
+            Mock<IRepository<Product>> productRepositoryMock = new Mock<IRepository<Product>>();
+            Mock<IRabbitMQMessenger> messengerMock = new Mock<IRabbitMQMessenger>();
+            ProductController controller = new ProductController(productRepositoryMock.Object, messengerMock.Object);
+
+            // Act
+
+            // Assert
+
+        }
     }
 }
