@@ -5,6 +5,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using OrderAPI.Controllers;
 using OrderAPI.Models;
+using OrderAPI.Models.ViewModels;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -76,17 +77,16 @@ namespace OrderTests
             Mock<IRepository<Order>> orderRepositoryMock = new Mock<IRepository<Order>>();
             Mock<IRabbitMQMessenger> messengerMock = new Mock<IRabbitMQMessenger>();
             OrderController controller = new OrderController(orderRepositoryMock.Object, productRepositoryMock.Object, messengerMock.Object);
-
             DateTime orderDate1 = DateTime.Parse("08/18/2018 07:22:16");
             int orderId1 = 1;
             int productId1 = 2;
             DateTime orderDate2 = DateTime.Parse("08/18/2019 07:22:16");
             int orderId2 = 2;
             int productId2 = 3;
-
             Order order1 = new Order() { Date = orderDate1, OrderId = orderId1, ProductId = productId1 };
             Order order2 = new Order() { Date = orderDate2, OrderId = orderId2, ProductId = productId2 };
             IEnumerable<Order> orders = new List<Order>() { order1, order2};
+
             orderRepositoryMock.Setup(repo => repo.GetAllAsync()).Returns(Task.FromResult(orders));
 
             // Act
@@ -104,6 +104,106 @@ namespace OrderTests
         }
 
         [TestMethod]
+        public async Task OrderController_PutAsync_BadRequest()
+        {
+            // Arrange
+            Mock<IRepository<Product>> productRepositoryMock = new Mock<IRepository<Product>>();
+            Mock<IRepository<Order>> orderRepositoryMock = new Mock<IRepository<Order>>();
+            Mock<IRabbitMQMessenger> messengerMock = new Mock<IRabbitMQMessenger>();
+            OrderController controller = new OrderController(orderRepositoryMock.Object, productRepositoryMock.Object, messengerMock.Object);
+
+            // Act
+            IActionResult result = await controller.PutAsync(1, null);
+
+            // Assert
+            Assert.IsInstanceOfType(result, typeof(BadRequestObjectResult));
+            Assert.AreEqual(400, (result as BadRequestObjectResult).StatusCode);
+            Assert.AreEqual("Order is null.", (result as BadRequestObjectResult).Value);
+        }
+
+        [TestMethod]
+        public async Task OrderController_PutAsync_NotFound_OrderCouldNotBeFound()
+        {
+            // Arrange
+            Mock<IRepository<Product>> productRepositoryMock = new Mock<IRepository<Product>>();
+            Mock<IRepository<Order>> orderRepositoryMock = new Mock<IRepository<Order>>();
+            Mock<IRabbitMQMessenger> messengerMock = new Mock<IRabbitMQMessenger>();
+            OrderController controller = new OrderController(orderRepositoryMock.Object, productRepositoryMock.Object, messengerMock.Object);
+            int orderId = 1;
+            int productId = 2;
+            OrderViewModel orderViewModel = new OrderViewModel { ProductId = productId };
+            Order order = new Order();
+            order = null;
+
+            orderRepositoryMock.Setup(repo => repo.GetAsync(orderId)).Returns(Task.FromResult(order));
+
+            // Act
+            IActionResult result = await controller.PutAsync(orderId, orderViewModel);
+
+            // Assert
+            Assert.IsInstanceOfType(result, typeof(NotFoundObjectResult));
+            Assert.AreEqual(404, (result as NotFoundObjectResult).StatusCode);
+            Assert.AreEqual("The order could not be found.", (result as NotFoundObjectResult).Value);
+        }
+
+        [TestMethod]
+        public async Task OrderController_PutAsync_NotFound_ProductCouldNotBeFound()
+        {
+            // Arrange
+            Mock<IRepository<Product>> productRepositoryMock = new Mock<IRepository<Product>>();
+            Mock<IRepository<Order>> orderRepositoryMock = new Mock<IRepository<Order>>();
+            Mock<IRabbitMQMessenger> messengerMock = new Mock<IRabbitMQMessenger>();
+            OrderController controller = new OrderController(orderRepositoryMock.Object, productRepositoryMock.Object, messengerMock.Object);
+            DateTime date = DateTime.Parse("08/18/2018 07:22:16");
+            int orderId = 1;
+            int productId = 2;
+            OrderViewModel orderViewModel = new OrderViewModel { ProductId = productId };
+            Order order = new Order { Date = date, OrderId = orderId, ProductId = productId };
+            Product product = new Product();
+            product = null;
+
+            orderRepositoryMock.Setup(repo => repo.GetAsync(orderId)).Returns(Task.FromResult(order));
+            productRepositoryMock.Setup(repo => repo.GetAsync(productId)).Returns(Task.FromResult(product));
+
+            // Act
+            IActionResult result = await controller.PutAsync(orderId, orderViewModel);
+
+            // Assert
+            Assert.IsInstanceOfType(result, typeof(NotFoundObjectResult));
+            Assert.AreEqual(404, (result as NotFoundObjectResult).StatusCode);
+            Assert.AreEqual("The product could not be found.", (result as NotFoundObjectResult).Value);
+        }
+
+        [TestMethod]
+        public async Task OrderController_PutAsync_NoContent()
+        {
+            // Arrange
+            Mock<IRepository<Product>> productRepositoryMock = new Mock<IRepository<Product>>();
+            Mock<IRepository<Order>> orderRepositoryMock = new Mock<IRepository<Order>>();
+            Mock<IRabbitMQMessenger> messengerMock = new Mock<IRabbitMQMessenger>();
+            OrderController controller = new OrderController(orderRepositoryMock.Object, productRepositoryMock.Object, messengerMock.Object);
+            DateTime date = DateTime.Parse("08/18/2018 07:22:16");
+            int orderId = 1;
+            int productId = 2;
+            string productName = "iPhone";
+            decimal productPrice = 5150;
+            int productStock = 12;
+            OrderViewModel orderViewModel = new OrderViewModel { ProductId = productId };
+            Order order = new Order { Date = date, OrderId = orderId, ProductId = productId };
+            Product product = new Product { ProductId = productId, Name = productName, Price = productPrice, Stock = productStock};
+
+            orderRepositoryMock.Setup(repo => repo.GetAsync(orderId)).Returns(Task.FromResult(order));
+            productRepositoryMock.Setup(repo => repo.GetAsync(productId)).Returns(Task.FromResult(product));
+
+            // Act
+            IActionResult result = await controller.PutAsync(orderId, orderViewModel);
+
+            // Assert
+            Assert.IsInstanceOfType(result, typeof(NoContentResult));
+            Assert.AreEqual(204, (result as NoContentResult).StatusCode);
+        }
+
+        [TestMethod]
         public async Task OrderController_DeleteAsync_NoContent()
         {
             // Arrange
@@ -114,11 +214,7 @@ namespace OrderTests
             DateTime date = DateTime.Parse("08/18/2018 07:22:16");
             int orderId = 1;
             int productId = 2;
-
-            Order order = new Order();
-            order.Date = date;
-            order.OrderId = orderId;
-            order.ProductId = productId;
+            Order order = new Order { Date = date, OrderId = orderId, ProductId = productId };
 
             orderRepositoryMock.Setup(repo => repo.GetAsync(1)).Returns(Task.FromResult(order));
             orderRepositoryMock.Setup(repo => repo.DeleteAsync(order)).Returns(Task.FromResult(true));
@@ -142,6 +238,7 @@ namespace OrderTests
             OrderController controller = new OrderController(orderRepositoryMock.Object, productRepositoryMock.Object, messengerMock.Object);
             Order order = new Order();
             order = null;
+
             orderRepositoryMock.Setup(repo => repo.GetAsync(1)).Returns(Task.FromResult(order));
 
             // Act
@@ -150,6 +247,7 @@ namespace OrderTests
             // Assert
             Assert.IsInstanceOfType(result, typeof(NotFoundObjectResult));
             Assert.AreEqual(404, (result as NotFoundObjectResult).StatusCode);
+            Assert.AreEqual("The order could not be found.", (result as NotFoundObjectResult).Value);
         }
     }
 }
