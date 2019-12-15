@@ -178,7 +178,7 @@ namespace ProductTests
         }
 
         [TestMethod]
-        public async Task ProductController_PostAsync_NotFound()
+        public async Task ProductController_PostAsync_BadRequest()
         {
             //Arrange
             Mock<IRepository<Product>> productRepositoryMock = new Mock<IRepository<Product>>();
