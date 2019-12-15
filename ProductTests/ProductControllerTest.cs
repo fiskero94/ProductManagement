@@ -207,10 +207,32 @@ namespace ProductTests
             Mock<IRabbitMQMessenger> messengerMock = new Mock<IRabbitMQMessenger>();
             ProductController controller = new ProductController(productRepositoryMock.Object, messengerMock.Object);
 
+            int productId = 1;
+            Product productToUpdate = new Product()
+            {
+                ProductId = productId,
+                Name = "Product",
+                Price = 100.00M,
+                Stock = 10,
+            };
+            Product updatedProduct = new Product()
+            {
+                ProductId = productId,
+                Name = "Product Updated",
+                Price = 200.00M,
+                Stock = 20,
+            };
+
+            productRepositoryMock.Setup(repo => repo.GetAsync(productToUpdate.ProductId)).Returns(Task.FromResult(productToUpdate));
+
             // Act
+            IActionResult result = await controller.PutAsync(productToUpdate.ProductId, updatedProduct);
 
             // Assert
-
+            Assert.IsInstanceOfType(result, typeof(NoContentResult));
+            Assert.AreEqual(204, (result as NoContentResult).StatusCode);
+            productRepositoryMock.Verify(mock => mock.UpdateAsync(productToUpdate, updatedProduct), Times.Once);
+            messengerMock.Verify(mock => mock.PublishAsync("ProductUpdated", updatedProduct), Times.Once);
         }
 
         [TestMethod]
