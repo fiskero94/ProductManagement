@@ -234,11 +234,22 @@ namespace ProductTests
             Mock<IRepository<Product>> productRepositoryMock = new Mock<IRepository<Product>>();
             Mock<IRabbitMQMessenger> messengerMock = new Mock<IRabbitMQMessenger>();
             ProductController controller = new ProductController(productRepositoryMock.Object, messengerMock.Object);
+            int productId = 1;
+            string name = "Galaxy X";
+            decimal price = 5400;
+            int stock = 45;
+            Product product = new Product() { ProductId = 1, Name = name, Price = price, Stock = stock };
+            Product productToUpdate = null;
+
+            productRepositoryMock.Setup(repo => repo.GetAsync(productId)).Returns(Task.FromResult(productToUpdate));
 
             // Act
+            IActionResult result = await controller.PutAsync(productId, product);
 
             // Assert
-
+            Assert.IsInstanceOfType(result, typeof(NotFoundObjectResult));
+            Assert.AreEqual(404, (result as NotFoundObjectResult).StatusCode);
+            Assert.AreEqual("The product could not be found.", (result as NotFoundObjectResult).Value);
         }
     }
 }
