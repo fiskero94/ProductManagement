@@ -195,19 +195,76 @@ namespace OrderTests
         [TestMethod]
         public async Task OrderController_PostAsync_BadRequestViewModelNull()
         {
+            // Arrange
+            Mock<IRepository<Product>> productRepositoryMock = new Mock<IRepository<Product>>();
+            Mock<IRepository<Order>> orderRepositoryMock = new Mock<IRepository<Order>>();
+            Mock<IRabbitMQMessenger> messengerMock = new Mock<IRabbitMQMessenger>();
+            OrderController controller = new OrderController(orderRepositoryMock.Object, productRepositoryMock.Object, messengerMock.Object);
+            OrderViewModel viewModel = null;
 
+            // Act
+            IActionResult result = await controller.PostAsync(viewModel);
+
+            // Assert
+            Assert.IsInstanceOfType(result, typeof(BadRequestObjectResult));
+            Assert.AreEqual(400, (result as BadRequestObjectResult).StatusCode);
+            Assert.AreEqual("Order is null.", (result as BadRequestObjectResult).Value);
         }
 
         [TestMethod]
         public async Task OrderController_PostAsync_NotFound()
         {
+            // Arrange
+            Mock<IRepository<Product>> productRepositoryMock = new Mock<IRepository<Product>>();
+            Mock<IRepository<Order>> orderRepositoryMock = new Mock<IRepository<Order>>();
+            Mock<IRabbitMQMessenger> messengerMock = new Mock<IRabbitMQMessenger>();
+            OrderController controller = new OrderController(orderRepositoryMock.Object, productRepositoryMock.Object, messengerMock.Object);
+            
+            int productId = 1;
+            Product product = null;
+            OrderViewModel viewModel = new OrderViewModel() { ProductId = productId };
+            productRepositoryMock.Setup(repo => repo.GetAsync(productId)).Returns(Task.FromResult(product));
 
+            // Act
+            IActionResult result = await controller.PostAsync(viewModel);
+
+            // Assert
+            Assert.IsInstanceOfType(result, typeof(NotFoundObjectResult));
+            Assert.AreEqual(404, (result as NotFoundObjectResult).StatusCode);
+            Assert.AreEqual("The product could not be found.", (result as NotFoundObjectResult).Value);
         }
 
         [TestMethod]
         public async Task OrderController_PostAsync_BadRequestNotInStock()
         {
+            // Arrange
+            Mock<IRepository<Product>> productRepositoryMock = new Mock<IRepository<Product>>();
+            Mock<IRepository<Order>> orderRepositoryMock = new Mock<IRepository<Order>>();
+            Mock<IRabbitMQMessenger> messengerMock = new Mock<IRabbitMQMessenger>();
+            OrderController controller = new OrderController(orderRepositoryMock.Object, productRepositoryMock.Object, messengerMock.Object);
 
+            int productId = 1;
+            string name = "Product";
+            decimal price = 100.00M;
+            int stock = 0;
+
+            productRepositoryMock.Setup(repo => repo.GetAsync(1)).Returns(Task.FromResult(new Product()
+            {
+                ProductId = productId,
+                Name = name,
+                Price = price,
+                Stock = stock
+            }));
+
+            OrderViewModel viewModel = new OrderViewModel() { ProductId = productId };
+
+            // Act
+            IActionResult result = await controller.PostAsync(viewModel);
+
+            // Assert
+            Assert.IsInstanceOfType(result, typeof(BadRequestObjectResult));
+            Assert.AreEqual(400, (result as BadRequestObjectResult).StatusCode);
+            Assert.AreEqual("The product is not in stock.", (result as BadRequestObjectResult).Value);
         }
     }
 }
