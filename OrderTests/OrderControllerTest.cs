@@ -43,5 +43,25 @@ namespace OrderTests
             Assert.AreEqual(orderId, order.OrderId);
             Assert.AreEqual(productId, order.ProductId);
         }
+
+        [TestMethod]
+        public async Task OrderController_GetAsync_NotFound()
+        {
+            // Arrange
+            Mock<IRepository<Product>> productRepositoryMock = new Mock<IRepository<Product>>();
+            Mock<IRepository<Order>> orderRepositoryMock = new Mock<IRepository<Order>>();
+            Mock<IRabbitMQMessenger> messengerMock = new Mock<IRabbitMQMessenger>();
+            OrderController controller = new OrderController(orderRepositoryMock.Object, productRepositoryMock.Object, messengerMock.Object);
+            Order setup = null;
+
+            orderRepositoryMock.Setup(repo => repo.GetAsync(1)).Returns(Task.FromResult(setup));
+
+            // Act
+            IActionResult result = await controller.GetAsync(1);
+
+            // Assert
+            Assert.IsInstanceOfType(result, typeof(NotFoundObjectResult));
+            Assert.AreEqual(404, (result as NotFoundObjectResult).StatusCode);
+        }
     }
 }
