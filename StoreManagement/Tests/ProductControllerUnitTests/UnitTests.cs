@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace ProductControllerUnitTests
 {
     [TestClass]
-    public class Tests
+    public class UnitTests
     {
         [TestMethod]
         public async Task ProductController_GetAllAsync_Ok()

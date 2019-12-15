@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 namespace OrderControllerUnitTests
 {
     [TestClass]
-    public class Tests
+    public class UnitTests
     {
         [TestMethod]
         public async Task OrderController_GetAsync_Ok()
