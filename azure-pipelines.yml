@@ -9,6 +9,17 @@ trigger:
 pool:
   vmImage: 'ubuntu-latest'
 
+jobs:
+- job: test
+  displayName: Test
+  pool:
+    vmImage: 'ubuntu-latest'
+  steps:
+  - bash: 
+
+
+
+
 steps:
 - script: echo Hello, world!
   displayName: 'Run a one-line script'

@@ -1,15 +1,10 @@
-<Project Sdk="Microsoft.NET.Sdk">
-
+<Project Sdk="Microsoft.NET.Sdk;Microsoft.NET.Sdk.Publish">
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-
     <IsPackable>false</IsPackable>
-
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-
     <DockerfileContext>..\..</DockerfileContext>
   </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.2.0" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.9.5" />
@@ -18,9 +13,7 @@
     <PackageReference Include="MSTest.TestFramework" Version="2.0.0" />
     <PackageReference Include="coverlet.collector" Version="1.0.1" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\..\ProductAPI\ProductAPI.csproj" />
   </ItemGroup>
-
 </Project>
