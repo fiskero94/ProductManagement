@@ -72,5 +72,27 @@ namespace ProductTests
             Assert.AreEqual(productId, product.ProductId);
             Assert.AreEqual(stock, product.Stock);
         }
+
+        [TestMethod]
+        public async Task ProductController_GetAsync_NotFound()
+        {
+            //Arrange
+            Mock<IRepository<Product>> productRepositoryMock = new Mock<IRepository<Product>>();
+            Mock<IRabbitMQMessenger> messengerMock = new Mock<IRabbitMQMessenger>();
+            ProductController controller = new ProductController(productRepositoryMock.Object, messengerMock.Object);
+
+            Product setup = null;
+
+            productRepositoryMock.Setup(repo => repo.GetAsync(1)).Returns(Task.FromResult(setup));
+
+            // Act
+            IActionResult result = await controller.GetAsync(1);
+
+            // Assert
+            Assert.IsInstanceOfType(result, typeof(NotFoundObjectResult));
+            Assert.AreEqual(404, (result as NotFoundObjectResult).StatusCode);
+        }
+
+
     }
 }
