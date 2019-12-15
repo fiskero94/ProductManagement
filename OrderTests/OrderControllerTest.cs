@@ -78,10 +78,10 @@ namespace OrderTests
             Mock<IRabbitMQMessenger> messengerMock = new Mock<IRabbitMQMessenger>();
             OrderController controller = new OrderController(orderRepositoryMock.Object, productRepositoryMock.Object, messengerMock.Object);
 
-            DateTime orderDate1 = DateTime.Parse("08/18/2018 07:22:16");
+            DateTime orderDate1 = DateTime.Parse("2018-08-18T07:22:16.0000000Z");
             int orderId1 = 1;
             int productId1 = 2;
-            DateTime orderDate2 = DateTime.Parse("08/18/2019 07:22:16");
+            DateTime orderDate2 = DateTime.Parse("2018-08-18T07:22:16.0000000Z");
             int orderId2 = 2;
             int productId2 = 3;
 
@@ -112,7 +112,7 @@ namespace OrderTests
             Mock<IRepository<Order>> orderRepositoryMock = new Mock<IRepository<Order>>();
             Mock<IRabbitMQMessenger> messengerMock = new Mock<IRabbitMQMessenger>();
             OrderController controller = new OrderController(orderRepositoryMock.Object, productRepositoryMock.Object, messengerMock.Object);
-            DateTime date = DateTime.Parse("08/18/2018 07:22:16");
+            DateTime date = DateTime.Parse("2018-08-18T07:22:16.0000000Z");
             int orderId = 1;
             int productId = 2;
 
