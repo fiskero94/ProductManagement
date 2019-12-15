@@ -14,4 +14,9 @@
     <PackageReference Include="coverlet.collector" Version="1.0.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\StoreManagement\Infrastructure\Infrastructure.csproj" />
+    <ProjectReference Include="..\StoreManagement\ProductAPI\ProductAPI.csproj" />
+  </ItemGroup>
+
 </Project>
