@@ -177,8 +177,6 @@ namespace ProductTests
             Assert.AreEqual("The product could not be found.", (result as NotFoundObjectResult).Value);
         }
 
-
-
         [TestMethod]
         public async Task ProductController_PostAsync_BadRequest()
         {
@@ -203,7 +201,3 @@ namespace ProductTests
 
     }
 }
-
-
-
-
