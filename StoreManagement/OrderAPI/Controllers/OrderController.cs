@@ -46,20 +46,14 @@ namespace OrderAPI.Controllers
         public async Task<IActionResult> PostAsync([FromBody] OrderViewModel orderViewModel)
         {
             if (orderViewModel == null)
-            {
                 return BadRequest("Order is null.");
-            }
 
             Product product = await _productRepository.GetAsync(orderViewModel.ProductId);
             if (product == null)
-            {
                 return NotFound("The product could not be found.");
-            }
 
             if (product.Stock < 1)
-            {
                 return BadRequest("The product is not in stock.");
-            }
 
             Order order = new Order()
             {
